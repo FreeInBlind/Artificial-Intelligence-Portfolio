@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="zh-CN" data-lang="zh" data-preset="amber" data-fx="on" data-motion="full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>作品集 · PHOSPHOR-9</title>
+    <meta name="description" content="复古 CRT 显示器风格的 AI 方向个人作品集" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=VT323&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700;900&display=swap"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-scene="1">
+    <a class="skip" href="#screen" data-i18n="skip">跳到屏幕内容</a>
+
+    <!-- 房间：墙 + 带透视的木纹桌面 -->
+    <div class="room" aria-hidden="true">
+      <div class="wall"></div>
+      <div class="table"><i class="grain"></i><i class="seams"></i><i class="pool"></i></div>
+    </div>
+
+    <div class="setup">
+      <div class="rig">
+        <div class="monitor">
+          <i class="screw s-tl" aria-hidden="true"></i><i class="screw s-tr" aria-hidden="true"></i
+          ><i class="screw s-bl" aria-hidden="true"></i><i class="screw s-br" aria-hidden="true"></i>
+          <div class="top-strip" aria-hidden="true">
+            <span class="brand">PHOSPHOR-9</span><span class="vents"></span>
+          </div>
+
+          <div class="bezel">
+            <main class="screen" id="screen" tabindex="-1">
+              <div class="viewport">
+                <!-- 屏内控制：语言切换与界面同处一块玻璃之下，两种语言各用各的字体 -->
+                <div class="scr-top">
+                  <div class="lang-seg" id="lang" role="group" data-i18n-attr="aria-label:lang.aria">
+                    <button type="button" class="lang-b o-zh" data-l="zh" aria-pressed="true" lang="zh-CN">中文</button>
+                    <button type="button" class="lang-b o-en" data-l="en" aria-pressed="false" lang="en">EN</button>
+                  </div>
+                </div>
+
+                <!-- 频道 1：身份 -->
+                <section class="scene" id="scene-1" aria-labelledby="s1-title">
+                  <div class="s1-grid">
+                    <div class="s1-left">
+                      <h1 class="pix" id="s1-title">
+                        <span data-i18n="s1.hello">你好，我是 </span><b class="accent glow nm" id="p-name"></b>
+                      </h1>
+                      <p class="lead" id="p-role"></p>
+                      <div class="panel check">
+                        <div class="panel-h">
+                          <span data-i18n="s1.check">能力自检</span
+                          ><button type="button" class="mini plain" id="skip-check" data-i18n="s1.skip">跳过</button>
+                        </div>
+                        <ul class="selfcheck" id="selfcheck"></ul>
+                      </div>
+                      <div
+                        class="cmds"
+                        id="cmds"
+                        role="group"
+                        aria-label="简介切换"
+                        data-i18n-attr="aria-label:s1.cmds"
+                      ></div>
+                      <div class="cmd-out" id="cmd-out" aria-live="polite">
+                        <div class="cmd-inner" id="cmd-inner"></div>
+                      </div>
+                    </div>
+                    <figure class="s1-right">
+                      <div class="id-card">
+                        <canvas
+                          id="portrait"
+                          role="img"
+                          aria-label="符号化点阵头像"
+                          data-i18n-attr="aria-label:s1.portrait"
+                        ></canvas>
+                        <dl class="facts" id="facts"></dl>
+                        <!-- 近况：信息栏下面原本是空的，这里放两条带日期的真实进展，
+                           内容多时在卡片内部滚动，不把卡片顶出玻璃 -->
+                        <div class="id-now">
+                          <div class="id-now-h" data-i18n="s1.now">近况</div>
+                          <ul class="now-list" id="now-list"></ul>
+                        </div>
+                        <!-- 卡片脚：一行真实的本地时间，说明这台机器此刻在哪个时区 -->
+                        <div class="id-foot"><span data-i18n="id.time">本地时间</span><b id="clock">--:--</b></div>
+                      </div>
+                    </figure>
+                  </div>
+                </section>
+
+                <!-- 频道 2：项目档案 -->
+                <section class="scene" id="scene-2" aria-labelledby="s2-title" hidden>
+                  <div class="s2-head">
+                    <h1 class="pix sm" id="s2-title" data-i18n="s2.title">项目档案</h1>
+                    <p class="capacity" id="capacity" role="status"></p>
+                  </div>
+                  <div class="drive panel" id="drive" data-state="idle">
+                    <span class="drive-name"
+                      ><span data-i18n="drive.h">驱动器 A:</span
+                      ><i class="drive-led" id="drive-led" aria-hidden="true"></i
+                    ></span>
+                    <div class="slot" id="slot" data-empty="">
+                      <div class="slot-disk" id="slot-disk" hidden></div>
+                      <div class="loader" id="loader" hidden>
+                        <span class="bar"><i id="bar-fill"></i></span><span id="bar-pct">0%</span>
+                      </div>
+                    </div>
+                    <button type="button" class="mini ghost" id="eject" disabled data-i18n="eject">弹出</button>
+                    <p class="drive-msg" id="drive-msg" role="status"></p>
+                  </div>
+                  <div class="stage" id="stage">
+                    <div class="catalog" id="catalog"></div>
+                    <div class="log-strip">
+                      <span class="log-h" data-i18n="drive.log">驱动器日志</span>
+                      <pre
+                        class="log-body"
+                        id="log"
+                        role="log"
+                        aria-label="驱动器日志"
+                        data-i18n-attr="aria-label:drive.log"
+                      ></pre>
+                    </div>
+                  </div>
+                </section>
+
+                <!-- 频道 3：发送信号 -->
+                <section class="scene" id="scene-3" aria-labelledby="s3-title" hidden>
+                  <h1 class="pix sm" id="s3-title" data-i18n="s3.title">发送信号</h1>
+                  <div class="s3-grid">
+                    <form class="panel" id="tx-form" novalidate>
+                      <label
+                        ><span data-i18n="f.name">呼号 / 姓名</span
+                        ><input
+                          id="f-name"
+                          name="name"
+                          autocomplete="name"
+                          placeholder="怎么称呼你"
+                          data-i18n-attr="placeholder:f.name.ph"
+                          required
+                      /></label>
+                      <label
+                        ><span data-i18n="f.mail">回传地址 / 邮箱</span
+                        ><input
+                          id="f-mail"
+                          name="email"
+                          type="email"
+                          autocomplete="email"
+                          placeholder="name@example.com"
+                          required
+                      /></label>
+                      <label class="grow"
+                        ><span data-i18n="f.msg">信号内容</span
+                        ><textarea
+                          id="f-msg"
+                          name="message"
+                          rows="3"
+                          maxlength="600"
+                          placeholder="想聊的项目、合作或问题"
+                          data-i18n-attr="placeholder:f.msg.ph"
+                          required
+                        ></textarea>
+                        <span class="field-note"
+                          ><span data-i18n="f.msg.hint">写清项目背景、你想要什么、时间范围，回复会具体很多。</span
+                          ><i id="msg-count">0 / 600</i></span
+                        >
+                      </label>
+                      <div class="tx-foot">
+                        <button type="submit" class="btn" id="tx-btn" data-i18n="tx.send">发射信号 ▸</button>
+                        <p class="form-msg" id="form-msg" role="alert"></p>
+                      </div>
+                      <!-- 发送前确认：三项与信号强度条同源，填一项亮一项。
+                         它是带标题与计数的模块，压在表单底部，替代表单下面挂着的一串裸列表。 -->
+                      <div class="ready-block">
+                        <div class="panel-h">
+                          <span data-i18n="tx.ready">发送前检查</span><span class="muted" id="ready-count">0 / 3</span>
+                        </div>
+                        <ul class="ready-list" id="ready-list"></ul>
+                      </div>
+                    </form>
+                    <div class="s3-right">
+                      <div class="panel scope-panel">
+                        <div class="panel-h"><span data-i18n="tx.scope">示波器</span><span id="dbm">-90 dBm</span></div>
+                        <div class="scope-box">
+                          <canvas id="scope" width="480" height="120" aria-hidden="true"></canvas>
+                        </div>
+                      </div>
+                      <div class="panel">
+                        <div class="panel-h">
+                          <span data-i18n="tx.strength">信号强度</span><span class="muted" id="s3-lv"></span>
+                        </div>
+                        <div
+                          class="bars"
+                          id="bars"
+                          role="meter"
+                          aria-label="信号强度"
+                          data-i18n-attr="aria-label:tx.strength"
+                          aria-valuemin="0"
+                          aria-valuemax="10"
+                          aria-valuenow="0"
+                        ></div>
+                        <p class="meter-note" id="meter-note"></p>
+                      </div>
+                      <div class="panel notes">
+                        <div class="panel-h"><span data-i18n="tx.notes">频道备注</span></div>
+                        <dl class="note-list" id="note-list"></dl>
+                        <!-- 左栏写「发什么」，这一行回答「发出去之后怎么走」：三步是同一条真实流程 -->
+                        <ol class="tx-flow" id="tx-flow"></ol>
+                      </div>
+                      <div class="receipt" id="receipt" role="status" hidden></div>
+                    </div>
+                  </div>
+                </section>
+              </div>
+
+              <canvas class="static" id="static" aria-hidden="true"></canvas>
+              <div class="redraw" id="redraw" aria-hidden="true"></div>
+              <div class="boot-mask" id="boot-mask" aria-hidden="true"><i class="beam"></i></div>
+              <div class="glass" aria-hidden="true"><i class="g-refl"></i><i class="g-edge"></i></div>
+              <noscript><p class="noscript" data-i18n="noscript">需要启用 JavaScript 才能运行这台显示器。</p></noscript>
+            </main>
+          </div>
+
+          <!-- 控制条：电源在最左、旋钮在最右，全部位于同一水平线 -->
+          <div class="panel-bar">
+            <button
+              type="button"
+              class="power"
+              id="power"
+              aria-pressed="true"
+              aria-label="电源"
+              data-i18n-attr="aria-label:power"
+            >
+              <i class="led"></i>
+            </button>
+            <nav class="channels" aria-label="频道" data-i18n-attr="aria-label:nav.ch">
+              <button type="button" class="ch" data-ch="1" aria-current="page" data-i18n="ch.1">身份</button>
+              <button type="button" class="ch" data-ch="2" aria-current="false" data-i18n="ch.2">档案</button>
+              <button type="button" class="ch" data-ch="3" aria-current="false" data-i18n="ch.3">信号</button>
+            </nav>
+            <i class="pb-gap" aria-hidden="true"></i>
+            <div class="switches">
+              <button
+                type="button"
+                class="sw"
+                id="fx"
+                aria-pressed="true"
+                title="屏幕辉光与扫描线"
+                data-i18n="sw.fx"
+                data-i18n-attr="title:sw.fx.t"
+              >
+                辉光
+              </button>
+              <button
+                type="button"
+                class="sw"
+                id="motion"
+                aria-pressed="true"
+                title="动画效果"
+                data-i18n="sw.motion"
+                data-i18n-attr="title:sw.motion.t"
+              >
+                动效
+              </button>
+            </div>
+            <button type="button" class="knob" id="knob" aria-label="配色旋钮"><i></i></button>
+          </div>
+          <span class="sr-only" id="live" aria-live="polite"></span>
+          <span class="sr-only" id="knob-label"></span>
+        </div>
+        <i class="contact" aria-hidden="true"></i>
+      </div>
+
+      <!-- 磁盘架：桌面前景的实体，始终完整落在首屏内 -->
+      <aside class="desk" id="desk" aria-label="磁盘架" data-i18n-attr="aria-label:desk.h">
+        <div class="desk-h" data-i18n="desk.h">磁盘架</div>
+        <ul class="rack" id="rack"></ul>
+      </aside>
+    </div>
+
+    <script src="js/i18n.js"></script>
+    <script src="data/profile.js"></script>
+    <script src="data/projects.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>

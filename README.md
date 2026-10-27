@@ -1,3 +1,9 @@
-﻿# Artificial Intelligence Portfolio
+# Project 1 — Portfolio Website
 
-My artificial intelligence portfolio.
+## Features
+- Hero section
+- About section
+- Projects showcase
+- Contact form
+- Responsive design
+- Vercel deployment
